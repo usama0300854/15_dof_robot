@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arduinobot">
+
+    <ros2_control name="RobotSystem" type="system">
+        <xacro:property name="PI" value="3.14159265359" />
+        <!-- ros2_control Gazebo -->
+        <xacro:if value="$(arg is_sim)">
+            <hardware>
+                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            </hardware>
+            <joint name="left_gripper_right_claw_joint">
+                <param name="mimic">left_gripper_left_claw_joint</param>
+                <param name="multiplier">-1</param>
+                <command_interface name="position">
+                <param name="min">-0.055</param>
+                <param name="max">0.0</param>
+                </command_interface>
+            </joint>
+            <joint name="right_gripper_right_claw_joint">
+                <param name="mimic">right_gripper_left_claw_joint</param>
+                <param name="multiplier">-1</param>
+                <command_interface name="position">
+                <param name="min">-0.055</param>
+                <param name="max">0.0</param>
+                </command_interface>
+            </joint>
+        </xacro:if>
+        <!-- ros2_control Real Robot -->
+        <xacro:unless value="$(arg is_sim)">
+            <hardware>
+                <plugin>arduinobot_controller/ArduinobotInterface</plugin>
+                <param name="port">/dev/ttyACM0</param>
+            </hardware>
+        </xacro:unless>
+        <joint name="torso_joint">
+            <command_interface name="position">
+            <param name="min">-${PI / 2}</param>
+            <param name="max">${PI / 2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="left_joint_1">
+            <command_interface name="position">
+            <param name="min">-${PI / 2}</param>
+            <param name="max">${PI / 2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="left_joint_2">
+            <command_interface name="position">
+            <param name="min">-${PI / 2}</param>
+            <param name="max">${PI / 2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="left_joint_3">
+            <command_interface name="position">
+            <param name="min">-${PI / 2}</param>
+            <param name="max">${PI / 2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="left_joint_4">
+            <command_interface name="position">
+            <param name="min">-${PI / 2}</param>
+            <param name="max">${PI / 2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="left_joint_5">
+            <command_interface name="position">
+            <param name="min">-${PI / 2}</param>
+            <param name="max">${PI / 2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="left_joint_6">
+            <command_interface name="position">
+            <param name="min">-${PI / 2}</param>
+            <param name="max">${PI / 2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="left_gripper_left_claw_joint">
+            <command_interface name="position">
+            <param name="min">0.0</param>
+            <param name="max">0.055</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="right_joint_1">
+            <command_interface name="position">
+            <param name="min">-${PI / 2}</param>
+            <param name="max">${PI / 2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="right_joint_2">
+            <command_interface name="position">
+            <param name="min">-${PI / 2}</param>
+            <param name="max">${PI / 2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="right_joint_3">
+            <command_interface name="position">
+            <param name="min">-${PI / 2}</param>
+            <param name="max">${PI / 2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="right_joint_4">
+            <command_interface name="position">
+            <param name="min">-${PI / 2}</param>
+            <param name="max">${PI / 2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="right_joint_5">
+            <command_interface name="position">
+            <param name="min">-${PI / 2}</param>
+            <param name="max">${PI / 2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="right_joint_6">
+            <command_interface name="position">
+            <param name="min">-${PI / 2}</param>
+            <param name="max">${PI / 2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="right_gripper_left_claw_joint">
+            <command_interface name="position">
+            <param name="min">0.0</param>
+            <param name="max">0.055</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+
+    </ros2_control>
+
+</robot>

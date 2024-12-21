@@ -1,0 +1,114 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 20 # Hz
+
+    torso_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    left_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    left_arm_gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController  
+
+    right_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController  
+
+    right_arm_gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController    
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+
+
+# Torso joint trajectory controller
+torso_controller:
+  ros__parameters:
+    joints:
+      - torso_joint
+
+    command_interfaces:
+      - position
+
+    state_interfaces:
+      - position
+      
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
+
+
+# Left arm trajectory controller
+left_arm_controller:
+  ros__parameters:
+    joints:
+      - left_joint_1
+      - left_joint_2
+      - left_joint_3
+      - left_joint_4
+      - left_joint_5
+      - left_joint_6
+
+    command_interfaces:
+      - position
+
+    state_interfaces:
+      - position
+
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
+
+
+# Left arm Gripper trajectory controller
+left_arm_gripper_controller:
+  ros__parameters:
+    joints:
+      - left_gripper_left_claw_joint
+
+    command_interfaces:
+      - position
+
+    state_interfaces:
+      - position
+
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
+
+
+# right arm trajectory controller
+right_arm_controller:
+  ros__parameters:
+    joints:
+      - right_joint_1
+      - right_joint_2
+      - right_joint_3
+      - right_joint_4
+      - right_joint_5
+      - right_joint_6
+
+    command_interfaces:
+      - position
+
+    state_interfaces:
+      - position
+
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
+
+
+# right arm Gripper trajectory controller
+right_arm_gripper_controller:
+  ros__parameters:
+    joints:
+      - right_gripper_left_claw_joint
+
+    command_interfaces:
+      - position
+
+    state_interfaces:
+      - position
+
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true    
+
+

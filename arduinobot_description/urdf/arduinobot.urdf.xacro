@@ -1,0 +1,736 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arduinobot">
+
+    <!-- Load Simulated or Real Hardware Interfaces -->
+    <xacro:arg name="is_sim" default="true"/>
+
+    <!-- Include Gazebo Parameters -->
+    <xacro:include filename="$(find arduinobot_description)/urdf/arduinobot_gazebo.xacro" />
+
+    <!-- Include ros2_control Plugins -->
+    <xacro:include filename="$(find arduinobot_description)/urdf/arduinobot_ros2_control.xacro" />
+    
+    <!-- Useful XACRO Variables (Properties) -->
+    <xacro:property name="PI" value="3.14159265359" />
+    <xacro:property name="effort" value="30.0" />
+    <xacro:property name="velocity" value="10.0" />
+
+    <!-- Useful Macros -->
+    <xacro:macro name="default_inertial" params="mass">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="${mass}" />
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                     iyy="1.0" iyz="0.0"
+                     izz="1.0" />
+        </inertial>
+    </xacro:macro>
+
+
+   
+    <transmission name="torso_transmission">
+        <plugin>transmission_interface/SimpleTransmission</plugin>
+        <actuator name="torso_motor" role="torso_actuator"/>
+        <joint name="torso_joint"    role="torso_joint">
+            <mechanical_reduction>1.0</mechanical_reduction>
+        </joint>
+    </transmission>
+
+    <xacro:macro name="default_transmission_left" params="number">
+        <transmission name="left_transmission_${number}">
+            <plugin>transmission_interface/SimpleTransmission</plugin>
+            <actuator name="left_motor_${number}" role="left_actuator_1"/>
+            <joint name="left_joint_${number}"    role="left_joint_1">
+                <mechanical_reduction>1.0</mechanical_reduction>
+            </joint>
+        </transmission>
+    </xacro:macro>  
+
+  
+    <transmission name="left_gripper_transmission">
+        <plugin>transmission_interface/SimpleTransmission</plugin>
+        <actuator name="left_gripper_left_claw_motor" role="left_gripper_left_claw_actuator"/>
+        <joint name="left_gripper_left_claw_joint"    role="left_gripper_left_claw_joint">
+            <mechanical_reduction>1.0</mechanical_reduction>
+        </joint>
+    </transmission>
+
+
+
+    <xacro:macro name="default_transmission_right" params="number">
+        <transmission name="right_transmission_${number}">
+            <plugin>transmission_interface/SimpleTransmission</plugin>
+            <actuator name="right_motor_${number}" role="right_actuator_1"/>
+            <joint name="right_joint_${number}"    role="right_joint_1">
+                <mechanical_reduction>1.0</mechanical_reduction>
+            </joint>
+        </transmission>
+    </xacro:macro>
+
+   
+    <transmission name="right_gripper_transmission">
+        <plugin>transmission_interface/SimpleTransmission</plugin>
+        <actuator name="right_gripper_left_claw_motor" role="right_gripper_left_claw_actuator"/>
+        <joint name="right_gripper_left_claw_joint"    role="right_gripper_left_claw_joint">
+            <mechanical_reduction>1.0</mechanical_reduction>
+        </joint>
+    </transmission>
+    
+
+
+
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++ Links ++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <link name="world"/>
+
+    <link name="base_link">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/base_link.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/base_link.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="torso_link">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/torso.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/torso.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++ Left Arm Links ++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <link name="left_link_1">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/left_link_1.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/left_link_1.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="left_link_2">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/left_link_2.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/left_link_2.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="left_link_3">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/left_link_3.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/left_link_3.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="left_link_4">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/left_link_4.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/left_link_4.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="left_link_5">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/left_link_5.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/left_link_5.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="left_link_6">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/link_6.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/link_6.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++ Left Arm Gripper Links ++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <link name="left_gripper_base_link">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/gripper_base.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/gripper_base.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <link name="left_gripper_left_claw_link">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/gripper_claw_left.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/gripper_claw_left.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    
+    <link name="left_gripper_right_claw_link">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/gripper_claw_right.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/gripper_claw_right.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++ Right Arm Links ++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <link name="right_link_1">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/right_link_1.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/right_link_1.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="right_link_2">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/right_link_2.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/right_link_2.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="right_link_3">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/right_link_3.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/right_link_3.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="right_link_4">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/right_link_4.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/right_link_4.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="right_link_5">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/right_link_5.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/right_link_5.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="right_link_6">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/link_6.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/link_6.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++ Right Arm Gripper Links ++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <link name="right_gripper_base_link">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/gripper_base.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/gripper_base.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <link name="right_gripper_left_claw_link">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/gripper_claw_left.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/gripper_claw_left.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <link name="right_gripper_right_claw_link">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/gripper_claw_right.dae"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/gripper_claw_right.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <!-- intel 435i depth camera link -->
+    <!-- <link name="camera_link">
+        <xacro:default_inertial mass="1.0"/>
+        <visual>
+            <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/camera.dae"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://arduinobot_description/meshes/camera.dae"/>
+            </geometry>
+        </collision>
+    </link> -->
+
+
+    
+    <!-- +++++++++++++++++++++++++   joints   ++++++++++++++++++++++++++++++++ -->
+
+    <joint name="virtual_joint" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint>
+
+
+    <!-- Torso Joint -->
+    <joint name="torso_joint" type="revolute"> 
+        <limit lower="-3.14159" upper="3.14159" effort="${effort}" velocity="${velocity}"/>   
+        <axis xyz="0 0 -1"/>
+        <parent link="base_link"/>
+        <child link="torso_link"/>
+        <origin xyz="0 0 0.195" rpy="0 0 0"/>
+    </joint>
+
+
+
+    <!-- +++++++++++++++++++++++++++   Left Arm Joints    ++++++++++++++++++++++++++++++++++++++++++++++-->
+
+
+    <!-- Left Joint 1 (Shoulder joint) -->
+    <joint name="left_joint_1" type="revolute">
+        <limit lower="-1.3" upper="1.6" effort="${effort}" velocity="${velocity}"/>  
+        <axis xyz="0 1 0"/>
+        <parent link="torso_link"/>
+        <child link="left_link_1"/>
+        <origin xyz="-0.199 0 0.6025" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- Left Joint 2 -->
+    <joint name="left_joint_2" type="revolute">
+        <limit lower="-3.14159" upper="3.14159" effort="${effort}" velocity="${velocity}"/>  
+        <axis xyz="1 0 0"/>
+        <parent link="left_link_1"/>
+        <child link="left_link_2"/>
+        <origin xyz="-0.2125 0 0.0195" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- Left Joint 3 -->
+    <joint name="left_joint_3" type="revolute">
+        <limit lower="-3.14159" upper="3.14159" effort="${effort}" velocity="${velocity}"/>  
+        <axis xyz="0 0 1"/>
+        <parent link="left_link_2"/>
+        <child link="left_link_3"/>
+        <origin xyz="0 0 -0.1019" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- Left Joint 4 -->
+    <joint name="left_joint_4" type="revolute">
+        <limit lower="-2.61799" upper="2.61799" effort="${effort}" velocity="${velocity}"/>  
+        <axis xyz="1 0 0"/>
+        <parent link="left_link_3"/>
+        <child link="left_link_4"/>
+        <origin xyz="0 0 -0.37" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- Left Joint 5 -->
+    <joint name="left_joint_5" type="revolute">
+        <limit lower="-1.39626" upper="1.39626" effort="${effort}" velocity="${velocity}"/>  
+        <axis xyz="1 0 0"/>
+        <parent link="left_link_4"/>
+        <child link="left_link_5"/>
+        <origin xyz="0 0 -0.25" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- Left Joint 6 -->
+    <joint name="left_joint_6" type="revolute">
+        <limit lower="-3.14159" upper="3.14159" effort="${effort}" velocity="${velocity}"/>  
+        <axis xyz="0 0 1"/>
+        <parent link="left_link_5"/>
+        <child link="left_link_6"/>
+        <origin xyz="0 0 -0.0375" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- +++++++++++++++++++++++++++   Left Arm Gripper Joints    ++++++++++++++++++++++++++++++++++++++++++++++-->
+
+    <joint name="left_gripper_base_joint" type="fixed">
+        <parent link="left_link_6"/>
+        <child link="left_gripper_base_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="left_gripper_left_claw_joint" type="prismatic">
+        <limit lower="0.0" upper="0.055" effort="${effort}" velocity="${velocity}"/> 
+        <axis xyz="1 0 0"/>
+        <parent link="left_gripper_base_link"/>
+        <child link="left_gripper_left_claw_link"/>
+        <origin xyz="-0.021 0.0 -0.053" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="left_gripper_right_claw_joint" type="prismatic">
+        <limit lower="-0.055" upper="0.0" effort="${effort}" velocity="${velocity}"/>
+        <axis xyz="1 0 0"/>
+        <parent link="left_gripper_base_link"/>
+        <child link="left_gripper_right_claw_link"/>
+        <origin xyz="0.0252 0.0005 -0.053" rpy="0 0 0"/>
+        <mimic joint="left_gripper_left_claw_joint" multiplier="-1"/>
+    </joint>
+
+
+
+
+    <!-- +++++++++++++++++++++++++++   Right Arm Joints    ++++++++++++++++++++++++++++++++++++++++++++++-->
+
+
+    <!-- Right Joint 1 (Shoulder joint) -->
+    <joint name="right_joint_1" type="revolute">
+        <limit lower="-1.3" upper="1.6" effort="${effort}" velocity="${velocity}"/>    
+        <axis xyz="0 -1 0"/>
+        <parent link="torso_link"/>
+        <child link="right_link_1"/>
+        <origin xyz="0.199 0 0.6025" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- Right Joint 2 -->
+    <joint name="right_joint_2" type="revolute">
+        <limit lower="-3.14159" upper="3.14159" effort="${effort}" velocity="${velocity}"/>  
+        <axis xyz="1 0 0"/>
+        <parent link="right_link_1"/>
+        <child link="right_link_2"/>
+        <origin xyz="0.2125 0 0.0195" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- Right Joint 3 -->
+    <joint name="right_joint_3" type="revolute">
+        <limit lower="-3.14159" upper="3.14159" effort="${effort}" velocity="${velocity}"/>
+        <axis xyz="0 0 -1"/>
+        <parent link="right_link_2"/>
+        <child link="right_link_3"/>
+        <origin xyz="0 0 -0.1019" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- Right Joint 4 -->
+    <joint name="right_joint_4" type="revolute">
+        <limit lower="-2.61799" upper="2.61799" effort="${effort}" velocity="${velocity}"/> 
+        <axis xyz="1 0 0"/>
+        <parent link="right_link_3"/>
+        <child link="right_link_4"/>
+        <origin xyz="0 0 -0.37" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- Right Joint 5 -->
+    <joint name="right_joint_5" type="revolute">
+        <limit lower="-1.39626" upper="1.39626" effort="${effort}" velocity="${velocity}"/>  
+        <axis xyz="-1 0 0"/>
+        <parent link="right_link_4"/>
+        <child link="right_link_5"/>
+        <origin xyz="0 0 -0.25" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- Right Joint 6 -->
+    <joint name="right_joint_6" type="revolute">
+        <limit lower="-3.14159" upper="3.14159" effort="${effort}" velocity="${velocity}"/>   
+        <axis xyz="0 0 -1"/>
+        <parent link="right_link_5"/>
+        <child link="right_link_6"/>
+        <origin xyz="0 0 -0.0375" rpy="0 0 0"/>
+    </joint>
+
+
+    <!-- +++++++++++++++++++++++++++   Right Arm Gripper Joints    ++++++++++++++++++++++++++++++++++++++++++++++-->
+
+    <joint name="right_gripper_base_joint" type="fixed">
+        <parent link="right_link_6"/>
+        <child link="right_gripper_base_link"/>
+        <origin xyz="0 0 0" rpy="0 0 3.14159"/>
+    </joint>
+
+    <joint name="right_gripper_left_claw_joint" type="prismatic">
+        <limit lower="0.0" upper="0.055" effort="${effort}" velocity="${velocity}"/> 
+        <axis xyz="1 0 0"/>
+        <parent link="right_gripper_base_link"/>
+        <child link="right_gripper_left_claw_link"/>
+        <origin xyz="-0.021 0.0 -0.053" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="right_gripper_right_claw_joint" type="prismatic">
+        <limit lower="-0.055" upper="0.0" effort="${effort}" velocity="${velocity}"/>
+        <axis xyz="1 0 0"/>
+        <parent link="right_gripper_base_link"/>
+        <child link="right_gripper_right_claw_link"/>
+        <origin xyz="0.0252 0.0005 -0.053" rpy="0 0 0"/>
+        <mimic joint="right_gripper_left_claw_joint" multiplier="-1"/>
+    </joint>
+
+
+    <!-- +++++++++++++++++++++++++++   Sensors Joints    ++++++++++++++++++++++++++++++++++++++++++++++-->
+
+    <!-- <joint name="camera_joint" type="fixed">
+        <parent link="torso_link"/>
+        <child link="camera_link"/>
+        <origin xyz="0.0 0.1 0.6025" rpy="0 0 1.5708"/>
+    </joint> -->
+
+
+
+ 
+
+
+    <!-- Left Arm Transmissions-->
+    <xacro:default_transmission_left number="1"/>  <!-- Left Joint 1-->
+    <xacro:default_transmission_left number="2"/>  <!-- Left Joint 2-->
+    <xacro:default_transmission_left number="3"/>  <!-- Left Joint 3-->
+    <xacro:default_transmission_left number="4"/>  <!-- Left Joint 4-->
+    <xacro:default_transmission_left number="5"/>  <!-- Left Joint 5-->
+    <xacro:default_transmission_left number="6"/>  <!-- Left Joint 6-->
+
+
+  
+
+
+    <!-- Right Arm Transmissions-->
+    <xacro:default_transmission_right number="1"/>  <!-- Right Joint 1-->
+    <xacro:default_transmission_right number="2"/>  <!-- Right Joint 2-->
+    <xacro:default_transmission_right number="3"/>  <!-- Right Joint 3-->
+    <xacro:default_transmission_right number="4"/>  <!-- Right Joint 4-->
+    <xacro:default_transmission_right number="5"/>  <!-- Right Joint 5-->
+    <xacro:default_transmission_right number="6"/>  <!-- Right Joint 6-->
+
+ 
+
+
+</robot>
